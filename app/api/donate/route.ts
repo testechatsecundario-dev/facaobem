@@ -3,30 +3,28 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { amount, description } = body; // amount em reais (ex: 20)
+    const { amount, description } = body; // amount em centavos
 
     const secret = process.env.STREETPAY_SECRET_KEY;
     const company = process.env.STREETPAY_COMPANY_ID;
 
     if (!secret || !company) {
+      console.error("❌ ENV vars faltando");
       throw new Error("StreetPay ENV vars not configured");
     }
-
-    // transforma em centavos
-    const amountInCents = Math.round(Number(amount) * 100);
 
     // monta Basic Auth
     const authStr = `${secret}:${company}`;
     const authB64 = Buffer.from(authStr).toString("base64");
 
     const payload = {
-      amount: amountInCents,
+      amount,
       paymentMethod: "PIX",
       pix: { qrcode: true },
       items: [
         {
           title: description || "Doação Faça o Bem",
-          unitPrice: amountInCents,
+          unitPrice: amount,
           quantity: 1,
           externalRef: "site_donation",
         },
@@ -38,41 +36,35 @@ export async function POST(req: Request) {
       metadata: {
         origem: "site",
       },
-      // se quiser ativar o webhook depois, só adicionar:
-      // postbackUrl: `${process.env.WEBHOOK_URL}/webhook/streetpay`,
     };
 
-    const response = await fetch(
-      "https://api.streetpay.com.br/functions/v1/transactions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Basic ${authB64}`,
-          "Content-Type": "application/json",
-          accept: "application/json",
-        },
-        body: JSON.stringify(payload),
-      }
-    );
+    console.log("➡️ Enviando para StreetPay:", JSON.stringify(payload, null, 2));
+
+    const response = await fetch("https://api.streetpay.com.br/functions/v1/transactions", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${authB64}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+    console.log("⬅️ Resposta StreetPay:", JSON.stringify(data, null, 2));
 
     if (!response.ok) {
-      const err = await response.text();
-      console.error("StreetPay error:", err);
+      console.error("StreetPay error:", data);
       return NextResponse.json({ error: "Erro ao gerar Pix" }, { status: 500 });
     }
 
-    const data = await response.json();
-
     return NextResponse.json({
-      id: data?.id,
-      amount: data?.amount,
-      status: data?.status,
       pixCopiaECola: data?.pix?.qrcode || null,
-      // StreetPay não manda imagem pronta — se quiser gerar,
-      // dá pra usar uma lib de QRCode depois
+      qrCodeImageUrl: null,
+      raw: data, // 👈 extra pra debug temporário
     });
   } catch (err: any) {
-    console.error("Donate API error:", err);
+    console.error("❌ Donate API error:", err);
     return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
