@@ -1,34 +1,47 @@
-import Link from 'next/link'
 import Image from 'next/image'
-import { causes } from '@/data/causes'
+import DonateForm from '@/components/DonateForm'
+import { getCause } from '@/data/causes'
+import { notFound } from 'next/navigation'
 
-export default function Home() {
+export default function CausePage({ params }: { params: { slug: string } }) {
+  const cause = getCause(params.slug)
+  if (!cause) return notFound()
+
   return (
-    <div className="space-y-8">
-      <section className="card p-6 md:p-8">
-        <h1 className="text-2xl md:text-3xl font-bold mb-3">Sobre nós</h1>
-        <p className="text-[color:var(--muted)] leading-relaxed">
-          Acreditamos que pequenas doações feitas por muitas pessoas transformam histórias.
-          Criamos campanhas objetivas, com materiais visuais claros e processo de doação sem burocracia via Pix.
-        </p>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Campanhas em destaque</h2>
-        <div className="grid gap-4 md:grid-cols-2">
-          {causes.map(c => (
-            <Link key={c.slug} href={`/${c.slug}`} className="card overflow-hidden hover:opacity-95 transition">
-              <div className="relative h-44 w-full">
-                <Image src={c.coverImage || '/images/chiquinho.jpg'} alt={c.title} fill className="object-cover" />
-              </div>
-              <div className="p-5">
-                <h3 className="font-semibold">{c.title}</h3>
-                <p className="text-sm text-[color:var(--muted)]">{c.subtitle}</p>
-              </div>
-            </Link>
-          ))}
+    <div className="space-y-6">
+      <div className="card overflow-hidden">
+        <div className="relative h-56 w-full">
+          <Image
+            src={cause.coverImage || '/images/chiquinho.jpg'}
+            alt={cause.title}
+            fill
+            className="object-cover"
+          />
         </div>
-      </section>
+        <div className="p-6 md:p-8 space-y-3">
+          <h1 className="text-2xl md:text-3xl font-bold">{cause.title}</h1>
+          {cause.subtitle && (
+            <p className="text-[color:var(--muted)]">{cause.subtitle}</p>
+          )}
+          <article className="prose prose-invert max-w-none">
+            {cause.content.split('\n').map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </article>
+        </div>
+      </div>
+
+      <DonateForm slug={cause.slug} />
+
+      {/* Rodapé de credibilidade */}
+      <footer className="mt-10 text-center text-xs text-[color:var(--muted)] space-y-1">
+        <p>Fundação Faça o Bem</p>
+        <p>CNPJ: 00.000.000/0001-00</p>
+        <p>Endereço: Rua Exemplo, 123 - São Paulo/SP</p>
+        <p>
+          100% dos valores arrecadados são direcionados para essa causa.
+        </p>
+      </footer>
     </div>
   )
 }
