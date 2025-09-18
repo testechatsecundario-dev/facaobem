@@ -10,16 +10,17 @@ type DonateResponse = {
 }
 
 export default function DonateForm({ slug }: { slug: string }) {
-  const [value, setValue] = useState<number>(20)
+  const [value, setValue] = useState<number | ''>(20)
   const [loading, setLoading] = useState(false)
   const [resp, setResp] = useState<DonateResponse | null>(null)
+  const [copied, setCopied] = useState(false) // 👈 novo estado para feedback
 
   const min = 5
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (value < min) {
-      setResp({ ok: false, message: `Valor mínimo é R$ ${min.toFixed(2)}` })
+    if (!value || value < min) {
+      setResp({ ok: false, message: `O valor mínimo para doação é R$ ${min.toFixed(2)}` })
       return
     }
     setLoading(true)
@@ -31,12 +32,18 @@ export default function DonateForm({ slug }: { slug: string }) {
         body: JSON.stringify({ amount: value, slug })
       })
       const data = await r.json()
-      setResp(data)
+      setResp({ ...data, ok: r.ok })
     } catch (err: any) {
       setResp({ ok: false, message: err?.message || 'Erro ao gerar Pix' })
     } finally {
       setLoading(false)
     }
+  }
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000) // volta ao normal após 2s
   }
 
   return (
@@ -52,7 +59,10 @@ export default function DonateForm({ slug }: { slug: string }) {
             min={min}
             step="1"
             value={value}
-            onChange={(e) => setValue(Number(e.target.value))}
+            onChange={(e) => {
+              const val = e.target.value
+              setValue(val === '' ? '' : Number(val))
+            }}
             className="w-full rounded-xl bg-white/5 px-4 py-2 outline-none ring-1 ring-white/10 focus:ring-white/20"
             placeholder="Ex.: 20"
           />
@@ -65,7 +75,12 @@ export default function DonateForm({ slug }: { slug: string }) {
           </button>
         </div>
 
-        {/* 97% progress bar */}
+        {/* Aviso de valor mínimo */}
+        <p className="text-xs text-[color:var(--muted)]">
+          Valor mínimo: R$ {min.toFixed(2)}
+        </p>
+
+        {/* Progress bar (placeholder estática) */}
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-[color:var(--muted)]">
             <span>Progresso</span>
@@ -79,27 +94,28 @@ export default function DonateForm({ slug }: { slug: string }) {
         <div className="mt-5 space-y-3">
           {!resp.ok && (
             <div className="rounded-lg bg-red-500/15 text-red-300 p-3 text-sm">
-              {resp.message || 'Erro inesperado ao gerar Pix.'}
+              {resp.message || 'Erro inesperado ao gerar Pix. Tente novamente.'}
             </div>
           )}
-          {resp.ok && (
-            <div className="rounded-lg bg-white/5 p-4 space-y-3">
-              <p className="text-sm text-[color:var(--muted)]">Use o Pix copia-e-cola abaixo no seu app bancário:</p>
-              {resp.pixCopiaECola ? (
+          {resp.ok && resp.pixCopiaECola && (
+            <div className="rounded-lg bg-gray-100 text-black p-4 space-y-3">
+              <p className="text-sm">
+                Copie o código abaixo, cole no app do seu banco e finalize o pagamento. Seu apoio faz a diferença!
+              </p>
+              <div className="flex gap-2">
                 <textarea
                   readOnly
                   value={resp.pixCopiaECola}
-                  className="w-full h-28 rounded-lg bg-black/30 p-3 text-xs"
+                  className="w-full h-28 rounded-lg border p-3 text-xs bg-white"
                 />
-              ) : (
-                <p className="text-sm">Código Pix não retornado pela API.</p>
-              )}
-              {resp.qrCodeImageUrl && (
-                <div className="pt-2">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={resp.qrCodeImageUrl} alt="QR Code Pix" className="mx-auto w-56 h-56 object-contain rounded-lg" />
-                </div>
-              )}
+                <button
+                  onClick={() => copyToClipboard(resp.pixCopiaECola!)}
+                  className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-600"
+                  type="button"
+                >
+                  {copied ? '✅ Copiado!' : '🔗 Copiar'}
+                </button>
+              </div>
             </div>
           )}
         </div>
