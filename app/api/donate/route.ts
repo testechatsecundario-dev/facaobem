@@ -1,86 +1,67 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 
-/**
- * This is a thin server-side proxy to your payment provider (StreetPay).
- * - Keeps your API key secret (never call StreetPay directly from the browser).
- * - Validates the minimum amount.
- * - Returns Pix "copia e cola" and optional QR image URL for the frontend.
- *
- * Fill the TODOs based on your working bot code (endpoint, headers and payload).
- */
-
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const { amount, slug } = await req.json() as { amount: number, slug?: string }
+    const body = await req.json();
+    const { amount, description } = body; // amount em centavos
 
-    if (!amount || amount < 5) {
-      return NextResponse.json({ ok: false, message: 'Valor mínimo é R$ 5,00' }, { status: 400 })
+    const secret = process.env.STREETPAY_SECRET_KEY;
+    const company = process.env.STREETPAY_COMPANY_ID;
+
+    if (!secret || !company) {
+      throw new Error("StreetPay ENV vars not configured");
     }
 
-    // Convert to cents if your API expects integer value
-    const valueInCents = Math.round(amount * 100)
+    // monta Basic Auth
+    const authStr = `${secret}:${company}`;
+    const authB64 = Buffer.from(authStr).toString("base64");
 
-    // === TODO: configure StreetPay endpoint & headers based on your working bot ===
-    const STREETPAY_BASE = process.env.STREETPAY_BASE_URL || 'https://api.streetpay.com.br'
-    const STREETPAY_API_KEY = process.env.STREETPAY_API_KEY // do not expose in client
-    if (!STREETPAY_API_KEY) {
-      return NextResponse.json({ ok: false, message: 'Configuração ausente: STREETPAY_API_KEY' }, { status: 500 })
-    }
-
-    // NOTE: Replace the path, headers and body with the exact fields you already use in the bot.
-    const endpoint = `${STREETPAY_BASE}/functions/v1/transactions` // <-- ajuste se necessário
-
-    const body = {
-      // Ajuste o shape exatamente como no seu bot que funciona
-      amount: valueInCents,
-      payment_method: 'pix',
-      description: `Doação ${slug || 'campanha'}`,
-      // Dados fictícios aceitos pela StreetPay (replique do bot):
+    const payload = {
+      amount,
+      paymentMethod: "PIX",
+      pix: { qrcode: true },
+      items: [
+        {
+          title: description || "Doação Faça o Bem",
+          unitPrice: amount,
+          quantity: 1,
+          externalRef: "site_donation",
+        },
+      ],
       customer: {
-        name: 'Doador Anônimo',
-        document: '00000000000'
+        name: "Cliente_Site",
+        email: "anon@facaobem.org",
       },
-      // Campos que retornam o Pix copia e cola e o QR, conforme sua API
-      // ex.: return_pix: true
-    }
+      metadata: {
+        origem: "site",
+      },
+      // sem postbackUrl por enquanto
+    };
 
-    const r = await fetch(endpoint, {
-      method: 'POST',
+    const response = await fetch("https://api.streetpay.com.br/functions/v1/transactions", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${STREETPAY_API_KEY}`,
-        // Alguns provedores usam header 'apikey' separado. Se seu bot usa, replique aqui.
-        // 'apikey': STREETPAY_API_KEY
+        Authorization: `Basic ${authB64}`,
+        "Content-Type": "application/json",
+        accept: "application/json",
       },
-      body: JSON.stringify(body),
-      // Important: avoid caching
-      cache: 'no-store'
-    })
+      body: JSON.stringify(payload),
+    });
 
-    if (!r.ok) {
-      const text = await r.text()
-      return NextResponse.json({ ok: false, message: `StreetPay erro ${r.status}: ${text.slice(0, 200)}` }, { status: 500 })
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("StreetPay error:", err);
+      return NextResponse.json({ error: "Erro ao gerar Pix" }, { status: 500 });
     }
 
-    const data = await r.json()
-    // === TODO: mapeie abaixo conforme o retorno real da StreetPay ===
-    // Tente detectar campos comuns:
-    const pixCopiaECola =
-      data?.pixCopiaECola ||
-      data?.pix_code ||
-      data?.payload ||
-      data?.emv ||
-      data?.qrCode?.text ||
-      null
+    const data = await response.json();
 
-    const qrCodeImageUrl =
-      data?.qrCodeImageUrl ||
-      data?.qr_code_image ||
-      data?.qrCode?.image ||
-      null
-
-    return NextResponse.json({ ok: true, pixCopiaECola, qrCodeImageUrl })
+    return NextResponse.json({
+      pixCopiaECola: data?.pix?.qrcode || null,
+      qrCodeImageUrl: null, // StreetPay não retorna imagem pronta
+    });
   } catch (err: any) {
-    return NextResponse.json({ ok: false, message: err?.message || 'Erro ao processar' }, { status: 500 })
+    console.error("Donate API error:", err);
+    return NextResponse.json({ error: "Erro interno" }, { status: 500 });
   }
 }
