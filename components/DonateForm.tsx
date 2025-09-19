@@ -15,7 +15,7 @@ export default function DonateForm({ slug }: { slug: string }) {
   const [resp, setResp] = useState<DonateResponse | null>(null)
   const [copied, setCopied] = useState(false)
 
-  const min = 5
+  const min = 10
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
