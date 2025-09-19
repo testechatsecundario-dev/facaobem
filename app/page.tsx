@@ -5,12 +5,6 @@ import { causes } from "@/data/causes";
 export default function Home() {
   return (
     <div className="space-y-8">
-      {/* Cabeçalho */}
-      <header className="flex items-center gap-3 p-6 border-b border-white/10">
-        <Image src="/logo.png" alt="Fundação Faça o Bem" width={48} height={48} />
-        <span className="font-bold text-xl">Fundação Faça o Bem</span>
-      </header>
-
       {/* Lista de campanhas */}
       <main className="p-6 space-y-6">
         <h1 className="text-2xl font-bold">Campanhas em andamento</h1>
@@ -39,11 +33,6 @@ export default function Home() {
           ))}
         </div>
       </main>
-
-      {/* Rodapé */}
-      <footer className="text-center text-xs text-[color:var(--muted)] py-6 border-t border-white/10">
-        Fundação Faça o Bem — CNPJ 00.000.000/0001-00 — Rua Exemplo, 123, São Paulo/SP
-      </footer>
     </div>
   );
 }
