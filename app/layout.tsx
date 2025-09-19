@@ -36,8 +36,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="container mx-auto py-10 text-sm text-gray-500 text-center space-y-2 border-t border-gray-200">
           <p>100% dos valores arrecadados são direcionados para essa causa.</p>
           <p>
-            Fundação Faça o Bem — CNPJ 00.000.000/0001-00 <br />
-            Rua Exemplo, 123 — São Paulo/SP
+            Fundação Faça o Bem — CNPJ 19.542.668/0001-99 <br />
+            R. Konoi Endo, 33 - Vila Bela Vista, Suzano - SP, 08674-320
           </p>
         </footer>
       </body>
