@@ -69,7 +69,7 @@ export default function DonateForm({ slug }: { slug: string }) {
           <button
             type="submit"
             disabled={loading}
-            className="whitespace-nowrap rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 px-5 py-2 font-semibold"
+            className="whitespace-nowrap rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 px-6 py-2 font-semibold text-white"
           >
             {loading ? 'Gerando Pix...' : 'Doar via Pix'}
           </button>
@@ -84,7 +84,7 @@ export default function DonateForm({ slug }: { slug: string }) {
         <div className="space-y-2">
           <div className="flex justify-between text-sm font-bold text-green-500">
             <span>Progresso</span>
-            <span>97%</span>
+            <span className="text-base font-extrabold">97%</span>
           </div>
           <div className="progress"><div /></div>
         </div>
