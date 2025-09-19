@@ -16,12 +16,12 @@ export const causes: Cause[] = [
 Escreva aqui a história resumida e objetiva, com um pedido claro de ajuda.`
   },
   {
-    slug: "petlove",
-    title: "Resgate Coletivo PetLove",
-    subtitle: "Ração, vacinas e castrações",
-    coverImage: "/images/petlove.jpg",
-    content: `Esta campanha apoia um grupo de protetores independentes.
-Detalhe o que será feito com os recursos, mantendo objetividade e empatia.`
+    slug: "olhinho-mel",
+    title: "Campanha da Mel",
+    subtitle: "Você pode fazer a diferença na vida da Mel",
+    coverImage: "/images/mel01.jpg",
+    content: `Ela já foi resgatada e está sob cuidados veterinários.
+Mas precisamos da sua ajuda para custear o tratamento e minimizar o dano que o ser humano já fez a ela.`
   }
 ]
 
