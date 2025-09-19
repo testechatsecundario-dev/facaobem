@@ -8,12 +8,13 @@ export type Cause = {
 
 export const causes: Cause[] = [
   {
-    slug: "chiquinho",
-    title: "Campanha do Chiquinho",
-    subtitle: "Ajude o Chiquinho a vencer essa fase",
-    coverImage: "/images/chiquinho.jpg",
-    content: `O Chiquinho precisa de apoio imediato para custear cuidados veterinários e alimentação.
-Escreva aqui a história resumida e objetiva, com um pedido claro de ajuda.`
+    slug: "perebas",
+    title: "Campanha do Perebas",
+    subtitle: "Ajude o Perebas a vencer essa fase",
+    coverImage: "/images/perebas.jpg",
+    content: `O Perebas precisa de apoio imediato para custear cuidados veterinários e alimentação.
+Houve uma fratura grave no maxilar e parte do lábio foi arrancado quando foi atropelado. Estamos QUASE batendo a meta.
+Ele precisa da sua ajuda!`
   },
   {
     slug: "olhinho-mel",
