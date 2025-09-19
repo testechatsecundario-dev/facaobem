@@ -56,6 +56,7 @@ export default function DonateForm({ slug }: { slug: string }) {
           <span className="px-3 py-2 rounded-lg bg-white/5">R$</span>
           <input
             type="number"
+            inputMode="numeric"
             min={min}
             step="1"
             value={value}
@@ -80,13 +81,15 @@ export default function DonateForm({ slug }: { slug: string }) {
           Valor mínimo: R$ {min.toFixed(2)}
         </p>
 
-        {/* Progress bar (placeholder estática) */}
+        {/* Progress bar animada */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm font-bold text-green-500">
             <span>Progresso</span>
             <span className="text-base font-extrabold">97%</span>
           </div>
-          <div className="progress"><div /></div>
+          <div className="w-full h-3 rounded-full bg-white/10 overflow-hidden">
+            <div className="h-full bg-green-500 animate-pulse w-[97%]"></div>
+          </div>
         </div>
       </form>
 
@@ -99,6 +102,9 @@ export default function DonateForm({ slug }: { slug: string }) {
           )}
           {resp.ok && resp.pixCopiaECola && (
             <div className="rounded-lg bg-gray-100 text-black p-4 space-y-3">
+              <p className="text-sm font-semibold text-green-700">
+                🎉 Obrigado por apoiar essa causa! Seu Pix está pronto abaixo.
+              </p>
               <p className="text-sm">
                 Copie o código abaixo, cole no app do seu banco e finalize o pagamento. Seu apoio faz a diferença!
               </p>
@@ -110,7 +116,9 @@ export default function DonateForm({ slug }: { slug: string }) {
                 />
                 <button
                   onClick={() => copyToClipboard(resp.pixCopiaECola!)}
-                  className="px-3 py-2 rounded-lg bg-blue-500 text-white text-sm hover:bg-blue-600"
+                  className={`px-3 py-2 rounded-lg text-white text-sm transition ${
+                    copied ? 'bg-green-600' : 'bg-blue-500 hover:bg-blue-600'
+                  }`}
                   type="button"
                 >
                   {copied ? '✅ Copiado!' : '🔗 Copiar'}
