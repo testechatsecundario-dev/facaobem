@@ -13,7 +13,7 @@ export default function DonateForm({ slug }: { slug: string }) {
   const [value, setValue] = useState<number | ''>(20)
   const [loading, setLoading] = useState(false)
   const [resp, setResp] = useState<DonateResponse | null>(null)
-  const [copied, setCopied] = useState(false) // 👈 novo estado para feedback
+  const [copied, setCopied] = useState(false)
 
   const min = 5
 
@@ -43,7 +43,7 @@ export default function DonateForm({ slug }: { slug: string }) {
   function copyToClipboard(text: string) {
     navigator.clipboard.writeText(text)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000) // volta ao normal após 2s
+    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -69,7 +69,7 @@ export default function DonateForm({ slug }: { slug: string }) {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 px-5 py-2 font-semibold"
+            className="whitespace-nowrap rounded-xl bg-green-500 hover:bg-green-600 disabled:opacity-60 px-5 py-2 font-semibold"
           >
             {loading ? 'Gerando Pix...' : 'Doar via Pix'}
           </button>
@@ -82,7 +82,7 @@ export default function DonateForm({ slug }: { slug: string }) {
 
         {/* Progress bar (placeholder estática) */}
         <div className="space-y-2">
-          <div className="flex justify-between text-xs text-[color:var(--muted)]">
+          <div className="flex justify-between text-sm font-bold text-green-500">
             <span>Progresso</span>
             <span>97%</span>
           </div>
