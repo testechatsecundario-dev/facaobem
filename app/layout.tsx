@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body className="min-h-screen bg-white text-gray-900 antialiased flex flex-col">
-        {/* Cabeçalho com logo */}
+        {/* Cabeçalho fixo em todas as páginas */}
         <header className="border-b border-gray-200">
           <div className="container mx-auto py-4 flex items-center gap-3">
             <Image
@@ -27,10 +27,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
         </header>
 
-        {/* Conteúdo principal */}
-        <main className="container mx-auto flex-1 py-8">{children}</main>
+        {/* Conteúdo da página */}
+        <main className="container mx-auto flex-1 py-8">
+          {children}
+        </main>
 
-        {/* Rodapé refinado */}
+        {/* Rodapé padrão */}
         <footer className="container mx-auto py-10 text-sm text-gray-500 text-center space-y-2 border-t border-gray-200">
           <p>100% dos valores arrecadados são direcionados para essa causa.</p>
           <p>
