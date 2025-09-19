@@ -9,14 +9,8 @@ export default function CausePage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="space-y-6">
-      {/* Cabeçalho com logo */}
-      <header className="flex items-center gap-3 p-4 border-b border-white/10">
-        <Image src="/logo.png" alt="Fundação Faça o Bem" width={48} height={48} />
-        <span className="font-bold text-lg">Fundação Faça o Bem</span>
-      </header>
-
-      {/* Conteúdo da campanha */}
-      <div className="card overflow-hidden">
+      {/* Card da campanha */}
+      <div className="card overflow-hidden border border-gray-200 bg-white shadow-md">
         <div className="relative h-56 w-full">
           <Image
             src={cause.coverImage || "/images/chiquinho.jpg"}
@@ -28,9 +22,9 @@ export default function CausePage({ params }: { params: { slug: string } }) {
         <div className="p-6 md:p-8 space-y-3">
           <h1 className="text-2xl md:text-3xl font-bold">{cause.title}</h1>
           {cause.subtitle && (
-            <p className="text-[color:var(--muted)]">{cause.subtitle}</p>
+            <p className="text-gray-600">{cause.subtitle}</p>
           )}
-          <article className="prose prose-invert max-w-none">
+          <article className="prose max-w-none text-gray-800">
             {cause.content.split("\n").map((p, i) => (
               <p key={i}>{p}</p>
             ))}
@@ -40,13 +34,6 @@ export default function CausePage({ params }: { params: { slug: string } }) {
 
       {/* Formulário de doação */}
       <DonateForm slug={cause.slug} />
-
-      {/* Rodapé */}
-      <footer className="text-center text-xs text-[color:var(--muted)] py-6 border-t border-white/10">
-        100% dos valores arrecadados são direcionados para essa causa.
-        <br />
-        Fundação Faça o Bem — CNPJ 00.000.000/0001-00 — Rua Exemplo, 123, São Paulo/SP
-      </footer>
     </div>
   );
 }
