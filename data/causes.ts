@@ -25,6 +25,14 @@ Ele precisa da sua ajuda!`
 Ele só tem você pra contar! Falta pouco!`
   },
   {
+    slug: "thor",
+    title: "Campanha do Thor",
+    subtitle: "Ele precisa voltar a andar!",
+    coverImage: "/images/thor.jpg",
+    content: `O Thor foi atropelado por uma moto e pode perder os movimentos das patas traseiras caso não seja devidamente tratado.
+Falta pouco para garantirmos que ele não perca os movimentos!`
+  },
+  {
     slug: "pacoca",
     title: "Campanha do Paçoca",
     subtitle: "Sua ajuda vai salvar o Paçoca! Urgente!!",
