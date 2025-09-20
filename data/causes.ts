@@ -17,6 +17,14 @@ Houve uma fratura grave no maxilar e parte do lábio foi arrancado quando foi at
 Ele precisa da sua ajuda!`
   },
   {
+    slug: "pacoca",
+    title: "Campanha do Paçoca",
+    subtitle: "Sua ajuda vai salvar o Paçoca! Urgente!!",
+    coverImage: "/images/pacoca.jpg",
+    content: `Conseguimos resgatar esse Caramelo que apelidamos de Paçoca. Ele foi vítima de tesouradas por um ser cruel e precisa da sua ajuda!.
+Você pode não mudar o mundo todo, mas vai mudar o mundo todo dele!`
+  }
+  {
     slug: "olhinho-mel",
     title: "Campanha da Mel",
     subtitle: "Você pode fazer a diferença na vida da Mel",
