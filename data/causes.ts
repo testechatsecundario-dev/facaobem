@@ -17,6 +17,14 @@ Houve uma fratura grave no maxilar e parte do lábio foi arrancado quando foi at
 Ele precisa da sua ajuda!`
   },
   {
+    slug: "zara",
+    title: "Campanha da Zara",
+    subtitle: "Não vamos desistir dela!",
+    coverImage: "/images/zara.jpg",
+    content: `Não sabemos o que aconteceu, mas ela foi abandonada com um dos olhos e parte do rosto dilacerados.
+Ela não vai recuperar um dos olhos, mas podemos devolver um pouco de dignidade a ela. Não falta muito!`
+  },
+  {
     slug: "zeus-urgente",
     title: "Campanha do Zeus",
     subtitle: "Cada segundo pra ele conta! Socorro!!",
