@@ -25,6 +25,14 @@ Ele precisa da sua ajuda!`
 Ele só tem você pra contar! Falta pouco!`
   },
   {
+    slug: "amora",
+    title: "Campanha da Amora",
+    subtitle: "Família pede ajuda para cirurgia!",
+    coverImage: "/images/amora.jpg",
+    content: `A Amora desenvolveu um tumor na barriguinha que agora está vazando e a família está sem condições de arcar com a cirurgia.
+Ela tem 9 aninhos e falta pouco para conseguirmos dar mais uma chance a ela!`
+  },
+  {
     slug: "thor",
     title: "Campanha do Thor",
     subtitle: "Ele precisa voltar a andar!",
