@@ -17,6 +17,14 @@ Houve uma fratura grave no maxilar e parte do lábio foi arrancado quando foi at
 Ele precisa da sua ajuda!`
   },
   {
+    slug: "zeus-urgente",
+    title: "Campanha do Zeus",
+    subtitle: "Cada segundo pra ele conta! Socorro!!",
+    coverImage: "/images/zeus.jpg",
+    content: `Ele está sob cuidados, mas ainda precisa fazer a cirurgia e precisa de medicamentos que são caros.
+Ele só tem você pra contar! Falta pouco!`
+  },
+  {
     slug: "pacoca",
     title: "Campanha do Paçoca",
     subtitle: "Sua ajuda vai salvar o Paçoca! Urgente!!",
